@@ -10,7 +10,7 @@ module Http::Cookie
     COOKIE_COMMA = /,(?=#{WHITESPACE}?#{NAME}=)/
 
     # Wdy, DD Mon YYYY HH:MM:SS GMT (RFC 6265 5.1.1)
-    DATE_FMT = TimeFormat.new("%a, %d %b %Y %H:%M:%S", kind=Time::Kind::Utc)
+    DATE_FMT = TimeFormat.new("%a %d %b %Y %H:%M:%S %z", kind=Time::Kind::Utc)
 
     def initialize(str, @logger=nil)
       super(str)
