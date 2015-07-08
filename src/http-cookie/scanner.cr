@@ -1,4 +1,6 @@
 require "string_scanner"
+require "time"
+require "time/time_format"
 
 module Http::Cookie
   class Scanner < StringScanner
@@ -7,18 +9,20 @@ module Http::Cookie
     INVALID_CHAR = /([\x00-\x20\x7F",;\\])/
     COOKIE_COMMA = /,(?=#{WHITESPACE}?#{NAME}=)/
 
+    # Wdy, DD Mon YYYY HH:MM:SS GMT (RFC 6265 5.1.1)
+    DATE_FMT = TimeFormat.new("%a, %d %b %Y %H:%M:%S", kind=Time::Kind::Utc)
+
     def initialize(str, @logger=nil)
       super(str)
     end
 
     def scan_set_cookie
-      # FIXXXME
       until eos?
         start = @offset
         len = nil
         skip WHITESPACE
         name, value = scan_name_value
-        attrs = {} of String => String
+        attrs = {} of String => (String|Bool|Time)
         case
 
         when skip(/,/)
@@ -31,7 +35,27 @@ module Http::Cookie
             next
           end
           attr_name = attr_name.downcase
-          # FIXME validations
+          case attr_name
+          when "expires"
+            # RFC 6265 5.2.1
+            next unless attr_value = parse_cookie_date(attr_value)
+          when "max-age"
+            # RFC 6265 5.2.2
+            next unless /\A-?\d+\z/.match(attr_value)
+          when "domain"
+            # RFC 6265 5.2.3
+            # An empty value SHOULD be ignored.
+            next unless attr_value && attr_value.length > 0
+          when "path"
+            # RFC 6265 5.2.4
+            # A relative path must be ignored rather than normalizing it
+            # to "/".
+            next unless /\A\//.match(attr_value)
+          when "secure", "httponly"
+            # RFC 6265 5.2.5, 5.2.6
+            attr_value = true
+          end
+
           attrs[attr_name] = attr_value
         end until eos?
 
@@ -117,5 +141,8 @@ module Http::Cookie
       ""
     end
 
+    def parse_cookie_date(s)
+      DATE_FMT.parse(s)
+    end
   end
 end

@@ -11,7 +11,6 @@ describe Http::Cookie::Scanner do
   it "can parse a cookie" do
     s = Http::Cookie::Scanner.new("foo=bar; x=y;")
     s.scan_set_cookie { |name, value, attr |
-      # FIXME look up how these things work
       name.should eq("foo")
       value.should eq("bar")
       attr.should eq({"x": "y"})
