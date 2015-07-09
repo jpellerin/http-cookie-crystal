@@ -1,9 +1,9 @@
 require "./spec_helper"
 
-describe Http::Cookie do
+describe HTTP::Cookie do
 
   it "can parses a header and make a cookie" do
-    cookies = Http::Cookie.parse(
+    cookies = HTTP::Cookie.parse(
       "PREF=1; expires=Wed, 08 Jul 2015 12:34:56 GMT",
       "foo.com")
 

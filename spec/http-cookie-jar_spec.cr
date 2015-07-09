@@ -1,9 +1,9 @@
 require "./spec_helper"
 
-describe Http::CookieJar do
+describe HTTP::CookieJar do
 
   it "can parse and store a cookie" do
-    jar = Http::CookieJar.new
+    jar = HTTP::CookieJar.new
     jar.parse(
       "PREF=1; expires=Wed, 08 Jul 2015 12:34:56 GMT",
       "foo.com")

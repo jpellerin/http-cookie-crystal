@@ -1,6 +1,6 @@
 require "time"
 
-module Http::Cookie
+module HTTP::Cookie
   class Cookie
     property name
     property value

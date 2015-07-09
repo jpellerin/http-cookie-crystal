@@ -1,15 +1,15 @@
 require "./spec_helper"
 
-describe Http::Cookie::Scanner do
+describe HTTP::Cookie::Scanner do
   # TODO: Write tests
 
   it "trivially works for empty input" do
-    s = Http::Cookie::Scanner.new("")
+    s = HTTP::Cookie::Scanner.new("")
     s.scan_set_cookie{}
   end
 
   it "can parse a cookie" do
-    s = Http::Cookie::Scanner.new("foo=bar; x=y;")
+    s = HTTP::Cookie::Scanner.new("foo=bar; x=y;")
     s.scan_set_cookie { |name, value, attr |
       name.should eq("foo")
       value.should eq("bar")
@@ -18,7 +18,7 @@ describe Http::Cookie::Scanner do
   end
 
   it "can parse a valid cookie date" do
-    s = Http::Cookie::Scanner.new("PREF=1; expires=Wed, 08 Jul 2015 12:34:56 GMT")
+    s = HTTP::Cookie::Scanner.new("PREF=1; expires=Wed, 08 Jul 2015 12:34:56 GMT")
     s.scan_set_cookie{ |name, value, attr|
       if attr
         a_t = attr["expires"] as Time
@@ -54,7 +54,7 @@ describe Http::Cookie::Scanner do
   #     {"PREF=1; expires=Sat, 32 Jan 2020 12:34:56 GMT", nil},
   #   ].each { |a|
   #     set_cookie, year = a
-  #     s = Http::Cookie::Scanner.new(set_cookie)
+  #     s = HTTP::Cookie::Scanner.new(set_cookie)
   #     s.scan_set_cookie{ |name, value, attr|
   #       if attr
   #         a_t = attr["expires"] as Time

@@ -1,6 +1,6 @@
 require "./http-cookie/*"
 
-module Http::Cookie
+module HTTP::Cookie
 
   extend self
 

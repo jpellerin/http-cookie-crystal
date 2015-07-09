@@ -2,7 +2,7 @@ require "string_scanner"
 require "time"
 require "time/time_format"
 
-module Http::Cookie
+module HTTP::Cookie
   class Scanner < StringScanner
     WHITESPACE = /[ \t]+/
     NAME = /(?!#{WHITESPACE})[^,;\\"=]*/
